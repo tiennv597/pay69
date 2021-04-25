@@ -59,6 +59,19 @@ class CtrHome extends GetxController {
     });
   }
 
+  Future<void> updateDebit(ModelDebit debit, String uid) async {
+    try {
+      await _db.collection("pay69").doc(uid).update({
+        'debit': debit.debit,
+        'expense': debit.expense,
+        'permoney': debit.permoney,
+      });
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
+
   Stream<List<ModelDebit>> debitStream() {
     return _db.collection("pay69").snapshots().map((QuerySnapshot query) {
       List<ModelDebit> retVal = List();
@@ -135,7 +148,7 @@ class CtrHome extends GetxController {
     bool checkusing = false;
     for (int i = 0; i < debit.length; i++) {
       if (payer == debit[i]) {
-        split = (split / debit.length).round();
+        split = (split / debit.length).ceil();
         checkusing = true;
         break;
       }
@@ -146,6 +159,8 @@ class CtrHome extends GetxController {
 
     debitDetail.forEach((element) {
       if (element.payer == payer) {
+        element.expense = element.expense + money;
+        element.permoney = element.permoney + split;
         for (int i = 0; i < debit.length; i++) {
           element.debit.forEach((key, value) {
             if (debit[i] == key) {
@@ -161,6 +176,7 @@ class CtrHome extends GetxController {
           if (debit[i] == element.payer) {
             element.debit.forEach((key, value) {
               if (payer == key) {
+                element.permoney = element.permoney - split;
                 element.debit.update(key, (v) {
                   return v - split;
                 });
@@ -169,8 +185,13 @@ class CtrHome extends GetxController {
           }
         }
       }
-      print(element.payer);
+      print(element.payer +
+          "chi " +
+          element.expense.toString() +
+          "tiêu " +
+          element.permoney.toString());
       print(element.debit);
+      updateDebit(element, element.payer);
     });
   }
 

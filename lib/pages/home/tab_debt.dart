@@ -29,6 +29,26 @@ class TabDebtHomeScr extends StatelessWidget {
                                   style: TextStyle(fontSize: 24.0),
                                 ),
                               )),
+                              Expanded(
+                                  child: Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Text(
+                                  "Tổng chi: " +
+                                      CtrHome.debitList[index].expense
+                                          .toString(),
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                              )),
+                              Expanded(
+                                  child: Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Text(
+                                  "Tổng tiêu: " +
+                                      CtrHome.debitList[index].permoney
+                                          .toString(),
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                              ))
                             ],
                           ),
                           Row(
